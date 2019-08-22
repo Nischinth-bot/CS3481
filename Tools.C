@@ -19,10 +19,17 @@
  * @param array of 8 bytes
  * @return uint64_t where the low order byte is bytes[0] and
  *         the high order byte is bytes[7]
-*/
+ */
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
-   return 0;
+    uint64_t ret = 0;
+    for(int i = 7; i >=  0; i --)
+    {
+        uint64_t mask = bytes[i];
+        mask = mask << (8 * i);
+        ret |= mask;
+    }
+    return ret;
 }
 
 /** 
@@ -38,10 +45,15 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
  * @param int32_t byteNum that indicates the byte to return (0 through 7)
  * @return 0 if byteNum is out of range
  *         byte 0, 1, .., or 7 of source if byteNum is within range
-*/
+ */
 uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
 {
-   return 0;
+    if(byteNum >= 8 || byteNum < 0) return 0;
+    uint64_t byteMask = 0xff;
+    byteMask = byteMask << (8*byteNum);
+    uint64_t ret = source & byteMask;
+    ret = ret >> (8*byteNum);
+    return ret; 
 }
 
 /**
@@ -66,7 +78,13 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
 {
-   return 0;
+    if(low > high || high < low || low < 0 || low > 63 || high < 0 || high > 63) return 0;
+    uint64_t mask = 0xffffffffffffffff;
+    mask =  mask >> (63 - high);
+    uint64_t ret = source & mask;
+    ret =  ret >> low;
+    return ret;
+
 }
 
 /**
@@ -88,7 +106,10 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-   return 0;
+    if(low > high || high < low || high > 63 || low < 0) return source;
+    uint64_t mask = getBits(0xffffffffffffffff,low,high);
+    mask = mask << low;
+    return (source | mask);
 }
 
 /**
@@ -108,7 +129,11 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 {
-   return 0;
+    if(low > high || high < low || high > 63 || low < 0) return source;
+    uint64_t mask = getBits(0xffffffffffffffff, low, high);
+    mask = mask << low;
+    mask = ~mask;
+    return (source & mask);
 }
 
 /**
@@ -133,9 +158,10 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
  * @return uint64_t that is the modifed dest
  */
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
-                         int32_t srclow, int32_t dstlow, int32_t length)
+        int32_t srclow, int32_t dstlow, int32_t length)
 {
-   return 0;
+    uint64_t source_subset = getBits(source, srclow, srclow + length);
+    
 }
 
 /**
@@ -154,7 +180,7 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
-   return 0;
+    return 0;
 }
 
 /**
@@ -171,7 +197,7 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  */
 uint8_t Tools::sign(uint64_t source)
 {
-   return 0;
+    return 0;
 }
 
 /**
@@ -190,7 +216,7 @@ uint8_t Tools::sign(uint64_t source)
  */
 bool Tools::addOverflow(uint64_t op1, uint64_t op2)
 {
-   return 0;
+    return 0;
 }
 
 /**
@@ -209,6 +235,6 @@ bool Tools::addOverflow(uint64_t op1, uint64_t op2)
  */
 bool Tools::subOverflow(uint64_t op1, uint64_t op2)
 {
-   return 0;
+    return 0;
 }
 
