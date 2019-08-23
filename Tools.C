@@ -160,8 +160,15 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
         int32_t srclow, int32_t dstlow, int32_t length)
 {
-    uint64_t source_subset = getBits(source, srclow, srclow + length);
-    
+    if(dstlow + length > 64 || srclow + length > 64 
+            || srclow < 0 || dstlow < 0 || length < 0) 
+    {
+        return dest;
+    }
+    uint64_t toBeCopied  = getBits(source, srclow, srclow + length - 1);
+    int64_t ret = clearBits(dest, dstlow, dstlow + length - 1); 
+    toBeCopied <<= (dstlow);
+    return (ret | toBeCopied);
 }
 
 /**
@@ -180,7 +187,9 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
-    return 0;
+    int startIndex = (byteNum *8);
+    int endIndex = startIndex + 7;
+    return setBits(source, startIndex, endIndex);
 }
 
 /**
@@ -197,7 +206,8 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  */
 uint8_t Tools::sign(uint64_t source)
 {
-    return 0;
+    return (source >> 63 == 1);
+
 }
 
 /**
