@@ -280,7 +280,10 @@ void addOverflowTests()
 {
    assert(Tools::addOverflow(0xffffffffffffffff, 0xffffffffffffffff) == false);
    assert(Tools::addOverflow(0x8000000000000000, 0x8000000000000000) == true);
-
+   assert(Tools::addOverflow(0x7fffffffffffffff, 0x0000000000000001) == true);
+   assert(Tools::addOverflow(0x6fffffffffffffff, 0x0000000000000001) == false);
+   assert(Tools::addOverflow(0xffffffffffffffff, 0x8000000000000000) == true);
+   assert(Tools::addOverflow(0xffffffffffffffff, 0xcfffffffffffffff) == false);
    /* Add four more tests.  See lab directions. */
 }
 
@@ -296,6 +299,6 @@ void subOverflowTests()
 {
    assert(Tools::subOverflow(0xffffffffffffffff, 0xffffffffffffffff) == false);
    assert(Tools::subOverflow(0x0000000000000004, 0x8000000000000003) == true);
-
+   assert(Tools::subOverflow(0x0000000000000001, 0x8000000000000000) == true);
    /* Add four more tests.  See lab directions. */
 }
